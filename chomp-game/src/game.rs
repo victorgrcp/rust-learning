@@ -1,3 +1,8 @@
+pub enum Move {
+    Valid,
+    Invalid,
+    Final
+}
 #[derive(Debug)]
 pub struct Game {
     board: Vec<Vec<bool>>,
@@ -10,7 +15,11 @@ impl Game {
         }
     }
     pub fn show_board(&self) {
-        for row in &self.board {
+        for i in 0..self.board[0].len() {
+            print!("{i} ");
+        }
+        println!("");
+        for (i, row) in self.board.iter().enumerate() {
             for col in row {
                 if *col {
                     print!("X ");
@@ -18,11 +27,11 @@ impl Game {
                     print!("O ");
                 }
             }
-            println!("");
+            print!("<-- {} \n", i);
         }
     }
     fn valid_move(&self, n: usize, m: usize) -> bool {
-        if n > self.board.len() || m > self.board[0].len() {
+        if n >= self.board.len() || m >= self.board[0].len() {
             return false;
         }
         else if self.board[n][m] == true {
@@ -30,13 +39,17 @@ impl Game {
         }
         true
     }
-    pub fn fill_board(&mut self, n: usize, m: usize) -> bool {
-        if valid_move {
-            for i in (0..n).rev() {
-                for j in 0..self.board.len() {
+    pub fn fill_board(&mut self, n: usize, m: usize) -> Move {
+        if self.valid_move(n, m) {
+            for i in (0..n+1).rev() {
+                for j in m..self.board.len() {
                     self.board[i][j] = true;
                 }
             }
-        }
+            if n==self.board.len()-1 && m==0 {
+                return Move::Final;
+            } 
+            return Move::Valid;
+        } Move::Invalid
     }
 }
